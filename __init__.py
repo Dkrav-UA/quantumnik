@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from quantumnik import Quantumnik, NAME
+from .quantumnik import Quantumnik, NAME
 
 def name():
   return NAME

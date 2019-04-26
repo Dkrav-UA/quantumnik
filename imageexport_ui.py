@@ -7,7 +7,8 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from qgis.PyQt import QtCore, QtGui
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 
 class Ui_ImageExport(object):
     def setupUi(self, ImageExport):

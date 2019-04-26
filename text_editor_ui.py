@@ -7,7 +7,8 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from qgis.PyQt import QtCore, QtGui
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox, QDockWidget
 
 class Ui_DockWidget(object):
     def setupUi(self, DockWidget):
@@ -22,7 +23,7 @@ class Ui_DockWidget(object):
         DockWidget.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         DockWidget.setAcceptDrops(False)
         DockWidget.setFloating(False)
-        DockWidget.setFeatures(QtGui.QDockWidget.AllDockWidgetFeatures)
+        DockWidget.setFeatures(QDockWidget.AllDockWidgetFeatures)
         DockWidget.setAllowedAreas(QtCore.Qt.AllDockWidgetAreas)
         self.dockWidgetContents = QtGui.QWidget()
         self.dockWidgetContents.setObjectName("dockWidgetContents")

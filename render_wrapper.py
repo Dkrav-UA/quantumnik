@@ -22,7 +22,7 @@ def render_to_file(mapnik_map,output,format):
     if format in ('png','png256','jpeg') or (hasattr(mapnik,'mapnik_version') and mapnik.mapnik_version() >= 700):
         try:
             mapnik.render_to_file(mapnik_map,output,format)
-        except Exception, e:
+        except Exception as e:
             return (False,e)            
     else:
         try:
@@ -30,6 +30,6 @@ def render_to_file(mapnik_map,output,format):
             surface = getattr(cairo,'%sSurface' % format.upper())(output,mapnik_map.width,mapnik_map.height)
             mapnik.render(mapnik_map, surface)
             surface.finish()
-        except Exception, e:
+        except Exception as e:
             return (False,e)
     return (True,mapnik_map)

@@ -2,13 +2,13 @@
 
 import os
 import tempfile
-import resources
-import relativism
+from . import resources
+from . import relativism
 from qgis.gui import *
 from qgis.core import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox, QDockWidget, QAction
 try:
     import mapnik2 as mapnik
 except ImportError:
@@ -23,7 +23,7 @@ MAPNIK_VERSION = None
 if hasattr(mapnik,'mapnik_version'):
     MAPNIK_VERSION = mapnik.mapnik_version()
 
-import sync
+from . import sync
     
 # Use pdb for debugging
 #import pdb
@@ -43,8 +43,8 @@ try:
 except:
     HIGHLIGHTING = False
 
-from imageexport import ImageExport
-from text_editor import TextEditor
+from .imageexport import ImageExport
+from .text_editor import TextEditor
 
 NAME = 'Quantumnik'
     
@@ -74,35 +74,34 @@ class Quantumnik(QObject):
         self.keyAction3 = None
 
     def initGui(self):
-        self.action = QAction(QIcon(":/mapnikglobe.png"), QString("Create Mapnik Canvas"),
+        self.action = QAction(QIcon(":/mapnikglobe.png"), "Create Mapnik Canvas",
                               self.iface.mainWindow())
         self.action.setWhatsThis("Create Mapnik Canvas")
         self.action.setStatusTip("%s: render with Mapnik" % NAME)
-        QObject.connect(self.action, SIGNAL("triggered()"), self.toggle)
+        self.action.triggered.connect(self.toggle)
 
-        self.action4 = QAction(QString("View live xml"), self.iface.mainWindow())
-        QObject.connect(self.action4, SIGNAL("triggered()"), self.view_xml)
+        self.action4 = QAction("View live xml", self.iface.mainWindow())
+        self.action4.triggered.connect(self.view_xml)
 
-        self.action3 = QAction(QString("Export Mapnik xml"),
+        self.action3 = QAction("Export Mapnik xml",
                                self.iface.mainWindow())
-        QObject.connect(self.action3, SIGNAL("triggered()"), self.save_xml)
+        self.action3.triggered.connect(self.save_xml)
 
-        self.action5 = QAction(QString("Load Mapnik xml"),
+        self.action5 = QAction("Load Mapnik xml",
                                self.iface.mainWindow())
-        QObject.connect(self.action5, SIGNAL("triggered()"), self.load_xml)
+        self.action5.triggered.connect(self.load_xml)
 
-        self.action6 = QAction(QString("Load Cascadenik mml"),
+        self.action6 = QAction("Load Cascadenik mml",
                                self.iface.mainWindow())
-        QObject.connect(self.action6, SIGNAL("triggered()"), self.load_mml)
+        self.action6.triggered.connect(self.load_mml)
 
-        self.action7 = QAction(QString("Export Map Graphics"), self.iface.mainWindow())
-        QObject.connect(self.action7, SIGNAL("triggered()"),
-                        self.export_image_gui)
+        self.action7 = QAction("Export Map Graphics", self.iface.mainWindow())
+        self.action7.triggered.connect(self.export_image_gui)
 
         self.helpaction = QAction(QIcon(":/mapnikhelp.png"),"About",
                                   self.iface.mainWindow())
         self.helpaction.setWhatsThis("%s Help" % NAME)
-        QObject.connect(self.helpaction, SIGNAL("triggered()"), self.helprun)
+        self.helpaction.triggered.connect(self.helprun)
         
         self.iface.addToolBarIcon(self.action)
 
@@ -117,15 +116,15 @@ class Quantumnik(QObject):
 
         # > QGIS 1.2
         if hasattr(self.iface,'registerMainWindowAction'):
-            self.keyAction2 = QAction(QString("Switch to QGIS"), self.iface.mainWindow())
+            self.keyAction2 = QAction("Switch to QGIS", self.iface.mainWindow())
             self.iface.registerMainWindowAction(self.keyAction2, "Ctrl+[")
             self.iface.addPluginToMenu("&%s" % NAME, self.keyAction2)
-            QObject.connect(self.keyAction2, SIGNAL("triggered()"),self.switch_tab_qgis)
+            self.keyAction2.triggered.connect(self.switch_tab_qgis)
     
-            self.keyAction3 = QAction(QString("Switch to Mapnik"), self.iface.mainWindow())
+            self.keyAction3 = QAction("Switch to Mapnik", self.iface.mainWindow())
             self.iface.registerMainWindowAction(self.keyAction3, "Ctrl+]")
             self.iface.addPluginToMenu("&%s" % NAME, self.keyAction3)
-            QObject.connect(self.keyAction3, SIGNAL("triggered()"),self.switch_tab_mapnik)
+            self.keyAction3.triggered.connect(self.switch_tab_mapnik)
         
     def unload(self):
         self.iface.removePluginMenu("&%s" % NAME,self.action)
@@ -204,6 +203,7 @@ class Quantumnik(QObject):
 
     def proj_warning(self):
         self.been_warned = True
+        '''
         ren = self.canvas.mapRenderer()
         if not ren.hasCrsTransformEnabled() and self.canvas.layerCount() > 1:
             if hasattr(self.canvas.layer(0),'crs'):
@@ -212,6 +212,7 @@ class Quantumnik(QObject):
             else:
                 if not self.canvas.layer(0).srs().toProj4() == ren.destinationSrs().toProj4():
                     QMessageBox.information(self.iface.mainWindow(),"Warning","The projection of the map and the first layer do not match. Mapnik may not render the layer(s) correctly.\n\nYou likely need to either enable 'On-the-fly' CRS transformation or set the Map projection in your Project Properties to the projection of your layer(s).")
+        '''
         
     def save_xml(self):
         # need to expose as an option!

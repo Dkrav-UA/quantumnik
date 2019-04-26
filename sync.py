@@ -6,9 +6,9 @@ import math
 import tempfile
 from qgis.gui import *
 from qgis.core import *
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from quantumnik import MAPNIK_VERSION
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
+from .quantumnik import MAPNIK_VERSION
 
 try:
     import mapnik2 as mapnik
@@ -947,7 +947,7 @@ class LayerAdaptor(object):
             <BandsCount>3</BandsCount>
         </GDAL_WMS>
         ''' % params
-        print wms_template
+        print(wms_template)
         (handle, service_description) = tempfile.mkstemp('.xml', 'qnik_gdal_wms-')
         os.close(handle)
         open(service_description, 'w').write(wms_template)
@@ -1174,6 +1174,7 @@ class EasyCanvas(object):
         return
     
     def raster_scale_factor(self):
+        return 1.0
         if hasattr(self.canvas.mapRenderer(),'rendererContext'):
             return self.canvas.mapRenderer().rendererContext().scaleFactor()
         else: ## QGIS < 1.2
@@ -1195,8 +1196,9 @@ class EasyCanvas(object):
         
     @property
     def srs(self):
-        ren = self.canvas.mapRenderer()
+        # ren = self.canvas.mapRenderer()
         srs_obj = None
+        '''
         if not ren.hasCrsTransformEnabled():
             # if we are not projecting on the fly...
             if self.canvas.layerCount() == 1:
@@ -1224,11 +1226,12 @@ class EasyCanvas(object):
                         srs_obj = self.canvas.layer(0).srs()
         # otherwise we are reprojecting on the fly and we'll set
         # the map projection to what QGIS actually reports
+        '''
         if not srs_obj:
-            if hasattr(self.canvas.mapRenderer(),'destinationCrs'):
-                srs_obj = self.canvas.mapRenderer().destinationCrs()
-            else:
-                srs_obj = self.canvas.mapRenderer().destinationSrs()
+            try:
+                srs_obj = self.canvas.mapSettings().destinationCrs() # WGS 84
+            except:
+                srs_obj = self.canvas.mapSettings().destinationCrs() # WGS 84            
 
 
         srid = ''
@@ -1272,7 +1275,7 @@ class EasyCanvas(object):
             return m
         
         # switch the layer order
-        layer_list = range(layer_count)
+        layer_list = list(range(layer_count))
         layer_list.reverse()
         #### TODO - proper datasource uniqueness-based dup detection
         #has_dupes = False

@@ -2,9 +2,10 @@
 
 import os
 import sys
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from text_editor_ui import Ui_DockWidget
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
+from .text_editor_ui import Ui_DockWidget
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox, QDockWidget
 
 class TextEditor(QDockWidget, Ui_DockWidget):
     def __init__(self, parent=None):

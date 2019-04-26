@@ -1,6 +1,6 @@
 [general]
 name=quantumnik
-qgisMinimumVersion=1.8
+qgisMinimumVersion=3.0
 description=Mapnik integration with QGIS
 version=0.4.1
 author=Dane Springmeyer

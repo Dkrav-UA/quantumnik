@@ -2,13 +2,14 @@
 
 import os
 import sys
-import sync
+from . import sync
 import time
 import tempfile
-import render_wrapper
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from imageexport_ui import Ui_ImageExport
+from . import render_wrapper
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
+from .imageexport_ui import Ui_ImageExport
+from PyQt5.QtWidgets import QDialog, QFileDialog, QMessageBox
 
 try:
     import mapnik2 as mapnik
@@ -150,7 +151,7 @@ class ImageExport(QDialog, Ui_ImageExport):
                     os.system('open %s -a "%s"' % (file_name, app))
                 else:
                     os.system('open "%s"' % file_name)
-        except Exception, e:
+        except Exception as e:
             QMessageBox.information(self.parent.iface.mainWindow(),"Information", 'Problem auto-opening image: %s' % e)
     
     # http://diotavelli.net/PyQtWiki/Threading,_Signals_and_Slots
